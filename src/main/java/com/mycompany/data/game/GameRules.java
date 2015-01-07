@@ -9,6 +9,11 @@ public class GameRules
     {
         this(new int[] { 12, 10 }, 1, 2, 3, 4, -1);
     }
+    
+    public GameRules(int gameId)
+    {
+        this(new int[] { 12, 10 }, 1, 2, 3, 4, gameId);
+    }
 
     public GameRules(int[] dimensions, int carriersCount, int destroyersCount, int schoonersCount, int boatsCount, int gameId)
     {

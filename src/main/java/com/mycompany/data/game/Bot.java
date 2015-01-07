@@ -22,7 +22,7 @@ class NodeDescriptor
 public class Bot extends LocalPlayer
 {
 
-    public Bot(Grid field, GameRules rules)
+    public Bot(GameRules rules)
     {
         super(rules);
     }
