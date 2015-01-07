@@ -1,5 +1,8 @@
 package com.mycompany.data.game;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "GameResponse")
 public class GameResponse
 {
 

@@ -2,6 +2,9 @@ package com.mycompany.data.game;
 
 import java.util.Arrays;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "GameRequest")
 public class GameRequest
 {
 
