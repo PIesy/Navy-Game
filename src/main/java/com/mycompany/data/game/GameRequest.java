@@ -15,14 +15,14 @@ public class GameRequest
         return type;
     }
 
-    public void setDirection(Directions direction)
-    {
-        this.direction = direction.name();
-    }
-
-    public String getDirection()
+    public Directions getDirection()
     {
         return direction;
+    }
+
+    public void setDirection(Directions direction)
+    {
+        this.direction = direction;
     }
 
     public void setCoordinates(int[] coordinates)
@@ -56,7 +56,7 @@ public class GameRequest
     }
 
     private String type = null;
-    private String direction = null;
+    private Directions direction = null;
     private String name = null;
     private int[] coordinates = null;
     private int gameId = 0;
