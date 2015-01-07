@@ -7,9 +7,9 @@ public class GameRules
 
     public GameRules()
     {
-        this(new int[]{ 12, 10 }, 1, 2, 3, 4, -1);
+        this(new int[] { 12, 10 }, 1, 2, 3, 4, -1);
     }
-    
+
     public GameRules(int[] dimensions, int carriersCount, int destroyersCount, int schoonersCount, int boatsCount, int gameId)
     {
         fieldDimensions = Arrays.copyOf(dimensions, 2);
@@ -19,56 +19,68 @@ public class GameRules
         this.boatsCount = boatsCount;
         this.gameId = gameId;
     }
-        
-    public int[] getFieldDimensions() {
-		return fieldDimensions;
-	}
 
-	public void setFieldDimensions(int[] fieldDimensions) {
-		this.fieldDimensions = fieldDimensions;
-	}
+    public int[] getFieldDimensions()
+    {
+        return fieldDimensions;
+    }
 
-	public int getCarriersCount() {
-		return carriersCount;
-	}
+    public void setFieldDimensions(int[] fieldDimensions)
+    {
+        this.fieldDimensions = fieldDimensions;
+    }
 
-	public void setCarriersCount(int carriersCount) {
-		this.carriersCount = carriersCount;
-	}
+    public int getCarriersCount()
+    {
+        return carriersCount;
+    }
 
-	public int getDestroyersCount() {
-		return destroyersCount;
-	}
+    public void setCarriersCount(int carriersCount)
+    {
+        this.carriersCount = carriersCount;
+    }
 
-	public void setDestroyersCount(int destroyersCount) {
-		this.destroyersCount = destroyersCount;
-	}
+    public int getDestroyersCount()
+    {
+        return destroyersCount;
+    }
 
-	public int getSchoonersCount() {
-		return schoonersCount;
-	}
+    public void setDestroyersCount(int destroyersCount)
+    {
+        this.destroyersCount = destroyersCount;
+    }
 
-	public void setSchoonersCount(int schoonersCount) {
-		this.schoonersCount = schoonersCount;
-	}
+    public int getSchoonersCount()
+    {
+        return schoonersCount;
+    }
 
-	public int getBoatsCount() {
-		return boatsCount;
-	}
+    public void setSchoonersCount(int schoonersCount)
+    {
+        this.schoonersCount = schoonersCount;
+    }
 
-	public void setBoatsCount(int boatsCount) {
-		this.boatsCount = boatsCount;
-	}
+    public int getBoatsCount()
+    {
+        return boatsCount;
+    }
 
-	public int getGameId() {
-		return gameId;
-	}
+    public void setBoatsCount(int boatsCount)
+    {
+        this.boatsCount = boatsCount;
+    }
 
-	public void setGameId(int gameId) {
-		this.gameId = gameId;
-	}
+    public int getGameId()
+    {
+        return gameId;
+    }
 
-	private int[] fieldDimensions;
+    public void setGameId(int gameId)
+    {
+        this.gameId = gameId;
+    }
+
+    private int[] fieldDimensions;
     private int carriersCount;
     private int destroyersCount;
     private int schoonersCount;
