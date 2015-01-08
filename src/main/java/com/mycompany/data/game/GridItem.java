@@ -47,10 +47,11 @@ public class GridItem
         this.ship = ship;
         empty = false;
     }
-
+    
     public void removeShip()
     {
         ship = null;
+        empty = true;
     }
 
     private Ship ship = null;

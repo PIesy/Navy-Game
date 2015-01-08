@@ -1,5 +1,8 @@
 package com.mycompany.data.game;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import com.mycompany.data.exceptions.AlreadyHitException;
 import com.mycompany.data.exceptions.ShipIsKilledException;
 import com.mycompany.data.game.ships.Ship;
@@ -115,6 +118,13 @@ public class Grid
         }
         setShipInGrid(startCoordinates, endCoordinates, ship);
     }
+    
+    public void unsetLastShip()
+    {
+        for(GridItem item : lastSetShip) {
+            item.removeShip();
+        }
+    }
 
     public boolean isOutOfBounds(int[] coordinates)
     {
@@ -138,7 +148,7 @@ public class Grid
         return false;
     }
 
-    private boolean searchCircullar(int x, int y)
+    public boolean searchCircullar(int x, int y)
     {
         for (int i = y - 1; i <= y + 1; i++) {
             for (int j = x - 1; j <= x + 1; j++)
@@ -156,13 +166,17 @@ public class Grid
 
     private void setShipInGrid(int[] startCoordinates, int[] endCoordinates, Ship ship)
     {
+        lastSetShip.clear();
         for (int i = startCoordinates[1]; i <= endCoordinates[1]; i++) {
-            for (int j = startCoordinates[0]; j <= endCoordinates[0]; j++) {
+            for (int j = startCoordinates[0]; j <= endCoordinates[0]; j++) 
+            {
                 grid[i][j].setShip(ship);
+                lastSetShip.add(grid[i][j]);
             }
         }
     }
 
+    private List<GridItem> lastSetShip = new ArrayList<>();
     private GridItem[][] grid;
     private int dimensions[] = new int[2];
 }
