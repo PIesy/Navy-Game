@@ -9,28 +9,30 @@ public class GameResponseFactory
 
     public static GameResponse makeSuccessResponse()
     {
-        GameResponseBuilder builder = new GameResponseBuilder();
+        GameResponseBuilder builder = GameResponse.createBuilder();
         return builder.addSuccess().build();
     }
 
     public static GameResponse makeErrorResponse(String errorMessage)
     {
-        GameResponseBuilder builder = new GameResponseBuilder();
+        GameResponseBuilder builder = GameResponse.createBuilder();
         return builder.addError(errorMessage).build();
     }
 
     public static GameResponse makeSuccessWithFieldResponse(Grid field)
     {
-        GameResponseBuilder builder = new GameResponseBuilder();
+        GameResponseBuilder builder = GameResponse.createBuilder();
         int[][] result = getIntegerFieldDescriptor(field);
+        
         builder.addSuccess();
         return builder.addPlayerField(result).build();
     }
 
     public static GameResponse makeSuccessWithBothFieldsResponse(Grid playerField, Grid botField)
     {
-        GameResponseBuilder builder = new GameResponseBuilder();
+        GameResponseBuilder builder = GameResponse.createBuilder();
         int[][] field = getIntegerFieldDescriptor(playerField);
+        
         builder.addPlayerField(field);
         field = getIntegerFieldDescriptor(botField);
         builder.addBotField(field);
@@ -39,7 +41,7 @@ public class GameResponseFactory
 
     public static GameResponse makeEndGameResponse(String message)
     {
-        GameResponseBuilder builder = new GameResponseBuilder();
+        GameResponseBuilder builder = GameResponse.createBuilder();
         return builder.addEndGameMessage(message).build();
     }
 

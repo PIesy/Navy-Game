@@ -17,17 +17,15 @@ public enum Directions
 
     public static Directions parseString(String str)
     {
-        switch (str.toLowerCase()) {
-        case "north":
-            return North;
-        case "south":
-            return South;
-        case "east":
-            return East;
-        case "west":
-            return West;
+        String valueString = str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+        Directions result;
+        
+        try {
+            result = valueOf(valueString);
+        } catch(RuntimeException e) {
+            return None;
         }
-        return None;
+        return result;
     }
 
     private int[] offset = { 0, 0 };

@@ -2,10 +2,17 @@ package com.mycompany.data.game;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.mycompany.data.GameResponseBuilder;
+
 @XmlRootElement(name = "GameResponse")
 public class GameResponse
 {
 
+    public static GameResponseBuilder createBuilder()
+    {
+        return new GameResponseBuilder();
+    }
+    
     public GameResponse setState(String state)
     {
         this.state = state;

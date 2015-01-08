@@ -5,19 +5,26 @@ public class ContentMapperFactory
     
     public static ContentMapper getMapper(MapperType type)
     {
-        switch (type) {
-        case Json:
-            return jsonMapper;
-        case Xml:
-            return xmlMapper;
-        default:
+        ContentMapper mapper = type.getMapper();
+        if(mapper == null) {
             throw new IllegalArgumentException("Invalid mapper type");
         }
+        return mapper;
     }
     
     public enum MapperType 
     {
-        Json, Xml, None;
+        Json(new JsonContentMapper()), Xml(new XmlContentMapper()), None(null);
+        
+        private MapperType(ContentMapper mapper)
+        {
+            this.mapper = mapper;
+        }
+        
+        public ContentMapper getMapper()
+        {
+            return mapper;
+        }
         
         public static MapperType parseString(String input)
         {
@@ -29,8 +36,7 @@ public class ContentMapperFactory
             }
             return None;
         }
+        
+        private final ContentMapper mapper;
     }
-    
-    private static final JsonContentMapper jsonMapper = new JsonContentMapper();
-    private static final XmlContentMapper xmlMapper = new XmlContentMapper();
 }

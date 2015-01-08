@@ -8,14 +8,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class GameRequest
 {
 
-    public void setType(String type)
+    public enum GameRequestType 
     {
-        this.type = type;
+        SetShip, SetName, Hit, GetInfo
     }
-
-    public String getType()
+    
+    public GameRequestType getType()
     {
         return type;
+    }
+
+    public void setType(GameRequestType type)
+    {
+        this.type = type;
     }
 
     public Directions getDirection()
@@ -57,8 +62,8 @@ public class GameRequest
     {
         this.name = name;
     }
-
-    private String type = null;
+ 
+    private GameRequestType type = null;
     private Directions direction = null;
     private String name = null;
     private int[] coordinates = null;

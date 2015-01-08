@@ -1,5 +1,7 @@
 package com.mycompany.data;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +21,7 @@ public class JsonContentMapper implements ContentMapper
     }
 
     @Override
-    public <T> T deserialize(String value, Class<T> valueClass) throws Exception
+    public <T> T deserialize(String value, Class<T> valueClass) throws IOException
     {
         return mapper.readValue(value, valueClass);
     }

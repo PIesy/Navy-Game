@@ -5,6 +5,7 @@ import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
@@ -12,7 +13,7 @@ public class XmlContentMapper implements ContentMapper
 {
 
     @Override
-    public <T> String serialize(T value, Class<T> valueClass) throws Exception
+    public <T> String serialize(T value, Class<T> valueClass) throws JAXBException
     {
         StringWriter writer = new StringWriter();
         JAXBContext context = JAXBContext.newInstance(valueClass);
@@ -23,7 +24,7 @@ public class XmlContentMapper implements ContentMapper
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T deserialize(String value, Class<T> valueClass) throws Exception
+    public <T> T deserialize(String value, Class<T> valueClass) throws JAXBException
     {
         JAXBContext context = JAXBContext.newInstance(valueClass);
         Unmarshaller unmarshaller = context.createUnmarshaller();
