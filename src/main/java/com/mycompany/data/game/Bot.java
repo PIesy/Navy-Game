@@ -1,6 +1,8 @@
 package com.mycompany.data.game;
 
 import com.mycompany.data.exceptions.ShipIsKilledException;
+import com.mycompany.data.game.automation.ComplexFieldFiller;
+import com.mycompany.data.game.automation.FieldFiller;
 import com.mycompany.data.game.automation.HitAnalyzer;
 
 class NodeDescriptor
