@@ -1,4 +1,4 @@
-package com.mycompany.data.game;
+package com.mycompany.data.game.automation;
 
 import java.util.List;
 import java.util.Collections;
@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import com.mycompany.data.game.Directions;
+import com.mycompany.data.game.Grid;
+import com.mycompany.data.game.LocalPlayer;
+import com.mycompany.data.game.LocationData;
 import com.mycompany.data.game.ships.Ship;
 
 public class ComplexFieldFiller implements FieldFiller

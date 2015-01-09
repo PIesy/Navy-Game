@@ -1,6 +1,6 @@
 package com.mycompany.data.game;
 
-class LocationData
+public class LocationData
 {
     public LocationData(int[] coordinates, Directions direction)
     {
