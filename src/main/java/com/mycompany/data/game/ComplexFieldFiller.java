@@ -1,11 +1,12 @@
 package com.mycompany.data.game;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import com.mycompany.data.game.ships.Ship;
@@ -17,7 +18,7 @@ public class ComplexFieldFiller implements FieldFiller
     public void fill(Grid field, LocalPlayer player)
     {
         Ship ship;
-        Random rand = new Random();
+        Random rand = new Random((new Date()).getTime());
 
         while (true)
         {
@@ -37,24 +38,42 @@ public class ComplexFieldFiller implements FieldFiller
     private LocationData getOptimalLocation(Grid field, Ship ship, Random rand)
     {
         ArrayList<Integer> freeNodes = new ArrayList<>();
-        HashMap<Integer, LocationData> data = new HashMap<>();
+        Map<Integer, List<LocationData>> data = new HashMap<>();
+        List<LocationData> mapItem = null;
         int index;
+        
+        fillPositionerData(data, freeNodes, ship, field);
+        Collections.sort(freeNodes);
+        Collections.reverse(freeNodes);
+        index = rand.nextInt(freeNodes.size() / 2);
+        mapItem = data.get(freeNodes.get(freeNodes.size() / 2 - index));
+        try {
+            index = rand.nextInt(mapItem.size());
+        } catch(Exception e) {
+            index = 0;
+        }
+        return mapItem.get(index);
+    }
+    
+    private void fillPositionerData(Map<Integer, List<LocationData>> map, ArrayList<Integer> list, Ship ship, Grid field)
+    {
+        int index = 0;
+        List<LocationData> mapItem = null;
         
         for(LocationData loc : possibleShipLocations) 
         {
             setShip(loc, ship, field);
             index = countFreeNodes(field);
-            freeNodes.add(index);
-            data.put(index, loc);  
+            list.add(index);
+            mapItem = map.get(index);
+            if(mapItem == null) 
+            {
+                mapItem = new ArrayList<>();
+                map.put(index, mapItem);
+            }
+            mapItem.add(loc);
             field.unsetLastShip();
         }
-        Collections.sort(freeNodes);
-        Collections.reverse(freeNodes);
-        index = rand.nextInt(freeNodes.size());
-        if(index > upperBound) {
-            index = rand.nextInt(upperBound);
-        }
-        return data.get(freeNodes.get(index));
     }
     
     private void analyzePossibleShipLocations(Ship ship, Grid field)
@@ -87,6 +106,5 @@ public class ComplexFieldFiller implements FieldFiller
         return result;
     }
 
-    private static final int upperBound = 1;
     ArrayList<LocationData> possibleShipLocations = new ArrayList<> ();
 }
