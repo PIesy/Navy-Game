@@ -96,27 +96,14 @@ public class Grid
 
     public void setShip(Ship ship, int x, int y, Directions direction) throws IndexOutOfBoundsException
     {
-        int[] offset = direction.convertTo2DOffset();
-        int[] startCoordinates = { x, y };
-        int[] endCoordinates = new int[2];
-        int[] temp;
-
-        for (int i = 0; i < 2; i++) {
-            endCoordinates[i] = startCoordinates[i] + offset[i] * (ship.getSize() - 1);
-        }
-        if ((offset[0] < 0) || (offset[1] < 0))
-        {
-            temp = startCoordinates;
-            startCoordinates = endCoordinates;
-            endCoordinates = temp;
-        }
-        if (isOutOfBounds(startCoordinates) || isOutOfBounds(endCoordinates)) {
+        int[][] coordinates = Directions.convertToCoordinatesPair(x, y, ship.getSize(), direction);
+        if (isOutOfBounds(coordinates[0]) || isOutOfBounds(coordinates[1])) {
             throw new IndexOutOfBoundsException("Ship doesn't fit in field");
         }
-        if (isNearExistingShip(startCoordinates, endCoordinates)) {
+        if (isNearExistingShip(coordinates[0], coordinates[1])) {
             throw new IndexOutOfBoundsException("Too close too your other ship");
         }
-        setShipInGrid(startCoordinates, endCoordinates, ship);
+        setShipInGrid(coordinates[0], coordinates[1], ship);
     }
     
     public void unsetLastShip()

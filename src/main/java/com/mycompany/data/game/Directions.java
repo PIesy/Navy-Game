@@ -27,6 +27,25 @@ public enum Directions
         }
         return result;
     }
+    
+    public static int[][] convertToCoordinatesPair(int x, int y, int distance, Directions direction)
+    {
+        int[] offset = direction.convertTo2DOffset();
+        int[] startCoordinates = { x, y };
+        int[] endCoordinates = new int[2];
+        int[] temp;
+
+        for (int i = 0; i < 2; i++) {
+            endCoordinates[i] = startCoordinates[i] + offset[i] * (distance - 1);
+        }
+        if ((offset[0] < 0) || (offset[1] < 0))
+        {
+            temp = startCoordinates;
+            startCoordinates = endCoordinates;
+            endCoordinates = temp;
+        }
+        return new int[][]{ startCoordinates, endCoordinates };
+    }
 
     private int[] offset = { 0, 0 };
 }

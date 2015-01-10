@@ -50,11 +50,7 @@ public class ComplexFieldFiller implements FieldFiller
         Collections.reverse(freeNodes);
         index = rand.nextInt(freeNodes.size() / 2);
         mapItem = data.get(freeNodes.get(freeNodes.size() / 2 - index));
-        try {
-            index = rand.nextInt(mapItem.size());
-        } catch(Exception e) {
-            index = 0;
-        }
+        index = rand.nextInt(mapItem.size());
         return mapItem.get(index);
     }
     

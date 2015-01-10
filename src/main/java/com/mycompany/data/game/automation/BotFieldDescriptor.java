@@ -3,6 +3,7 @@ package com.mycompany.data.game.automation;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycompany.data.game.Directions;
 import com.mycompany.data.game.GameRules;
 
 public class BotFieldDescriptor
@@ -34,7 +35,6 @@ public class BotFieldDescriptor
     public void setLethalHit(int x, int y)
     {
         nodes[y][x].setSuccessfullHit();
-        nodes[y][x].setInValidTarget();
         updateIfLethal(x, y);
     }
     
@@ -48,6 +48,20 @@ public class BotFieldDescriptor
         return dimensions;
     }
     
+    public int getRating(int x, int y)
+    {
+        return nodes[y][x].getHitRating();
+    }
+    
+    public void resetRating()
+    {
+        for (int i = 0; i < dimensions[1]; i++) {
+            for(int j = 0; j < dimensions[0]; j++) {
+                nodes[i][j].resetRating();
+            }
+        }
+    }
+    
     public void printDescriptor()
     {
         for(int i = 0; i < dimensions[1]; i++) 
@@ -56,13 +70,54 @@ public class BotFieldDescriptor
                 if(nodes[i][j].isSuccessfullHit()){
                     System.out.print(" S ");
                 } else if(nodes[i][j].isValidTarget()) {
-                    System.out.print(" - ");
+                    System.out.print(" " + nodes[i][j].getHitRating() + " ");
                 } else {
                     System.out.print(" V ");
                 }
             }
             System.out.println();
         }
+    }
+    
+    public boolean isOutOfBounds(int x, int y)
+    {
+        if((x < 0) || (y < 0)) {
+            return true;
+        }
+        if((x >= dimensions[0]) || (y >= dimensions[1])) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean doesShipFitInLocation(int size, int x, int y, Directions direction)
+    {
+        int[][] coordinates = Directions.convertToCoordinatesPair(x, y, size, direction);
+        if(isOutOfBounds(coordinates[0][0], coordinates[0][1]) || isOutOfBounds(coordinates[1][0], coordinates[1][1])) { 
+            return false;
+        }
+        return isNodesRangeValid(coordinates[0], coordinates[1]);
+    }
+    
+    public void updateNodesRating(int[] startCoordinates, int[] endCoordinates, int ratingAddition)
+    {
+        for(int i = startCoordinates[1]; i <= endCoordinates[1]; i++) {
+            for(int j = startCoordinates[0]; j <= endCoordinates[0]; j++) {
+                nodes[i][j].addRating(ratingAddition);
+            }
+        }
+    }
+    
+    private boolean isNodesRangeValid(int[] startCoordinates, int[] endCoordinates)
+    {
+        for(int i = startCoordinates[1]; i <= endCoordinates[1]; i++) {
+            for(int j = startCoordinates[0]; j <= endCoordinates[0]; j++) {
+                if(!nodes[i][j].isValidTarget()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     
     private List<int[]> searchSuccsessfullyHitNodesAround(int x, int y)
@@ -72,12 +127,8 @@ public class BotFieldDescriptor
         for (int i = y - 1; i <= y + 1; i++) {
             for (int j = x - 1; j <= x + 1; j++)
             {
-                if ((i < 0) || (j < 0) || (i > dimensions[1] - 1) || (j > dimensions[0] - 1)) {
-                    continue;
-                }
-                if((i == y) && (j == x)) {
-                    continue;
-                }
+                if (isOutOfBounds(j, i)) { continue; }
+                if((i == y) && (j == x)) { continue; }
                 if (nodes[i][j].isSuccessfullHit()) {
                     result.add(new int[]{ j, i });
                 }
@@ -92,7 +143,7 @@ public class BotFieldDescriptor
         hitNodes.add(new int[] { x , y });
         
         for(int[] coordinates : hitNodes) {
-            invalidateNodesAround(coordinates[0], coordinates[1], 1, 1);
+            validateNodesAround(coordinates[0], coordinates[1], 1, 1, false);
         }
     }
     
@@ -102,6 +153,7 @@ public class BotFieldDescriptor
         int rangeX = 1, rangeY = 0;
         
         if(hitNodes.isEmpty()) {
+            updateIfSingleHit(x, y);
             return;
         }
         hitNodes.add(new int[] { x , y });
@@ -111,19 +163,36 @@ public class BotFieldDescriptor
             rangeY = 1;
         }
         for(int[] coordinates : hitNodes) {
-            invalidateNodesAround(coordinates[0], coordinates[1], rangeX, rangeY);
+            validateNodesAround(coordinates[0], coordinates[1], 1, 1, false);
+            restoreNodesAround(coordinates[0], coordinates[1], rangeY, rangeX);
         }
     }
     
-    private void invalidateNodesAround(int x, int y, int rangeX, int rangeY)
+    private void updateIfSingleHit(int x, int y)
+    {
+        validateNodesAround(x, y, 1, 1, false);
+        restoreNodesAround(x, y, 0, 1);
+        restoreNodesAround(x, y, 1, 0);
+    }
+    
+    private void validateNodesAround(int x, int y, int rangeX, int rangeY, boolean isValid)
     {
         for(int i = y - rangeY; i <= y + rangeY; i++) {
             for(int j = x - rangeX; j <= x + rangeX; j++) 
             {
-                if ((i < 0) || (j < 0) || (i > dimensions[1] - 1) || (j > dimensions[0] - 1)) {
-                    continue;
-                }
-                nodes[i][j].setInValidTarget();
+                if (isOutOfBounds(j, i)) { continue; }
+                nodes[i][j].setValidTarget(isValid);
+            }
+        }
+    }
+    
+    private void restoreNodesAround(int x, int y, int rangeX, int rangeY)
+    {
+        for(int i = y - rangeY; i <= y + rangeY; i++) {
+            for(int j = x - rangeX; j <= x + rangeX; j++) 
+            {
+                if (isOutOfBounds(j, i)) { continue; }
+                nodes[i][j].setPreviousValidity();
             }
         }
     }
@@ -135,7 +204,7 @@ public class BotFieldDescriptor
         }
         return false;
     }
-    
+     
     private int[] dimensions;
     private NodeDescriptor[][] nodes;
 }

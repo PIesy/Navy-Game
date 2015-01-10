@@ -7,6 +7,11 @@ public class NodeDescriptor
         hitRating += rating;
     }
     
+    public void resetRating()
+    {
+        hitRating = 0;
+    }
+    
     public int getHitRating()
     {
         return hitRating;
@@ -29,9 +34,22 @@ public class NodeDescriptor
 
     public void setInValidTarget()
     {
+        previousValidity = validTarget;
         validTarget = false;
     }
+    
+    public void setValidTarget(boolean value)
+    {
+        previousValidity = validTarget;
+        validTarget = value;
+    }
+    
+    public void setPreviousValidity()
+    {
+        validTarget = previousValidity;
+    }
 
+    private boolean previousValidity = true;
     private boolean validTarget = true;
     private boolean successfullHit = false;
     private int hitRating = 0;

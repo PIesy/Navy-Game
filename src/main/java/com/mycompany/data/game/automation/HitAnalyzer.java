@@ -19,6 +19,7 @@ public class HitAnalyzer
     public HitAnalyzer(GameRules rules)
     {
         descriptor = new BotFieldDescriptor(rules);
+        filler = new RatingFiller(rules);
     }
     
     public boolean hit(Grid field) throws ShipIsKilledException
@@ -26,17 +27,20 @@ public class HitAnalyzer
         LocationData data;
         boolean success;
         
+        updateRatings();
         data = getHitLocation();
-
         try {
             success = field.hit(data.coordinates[0], data.coordinates[1]);
         } catch (AlreadyHitException | ShipIsKilledException e) {
             descriptor.setLethalHit(data.coordinates[0], data.coordinates[1]);
+            filler.destroyShip(shipSize);
+            shipSize = 0;
             lastSuccessfullHit.clear();
             throw (ShipIsKilledException)e;
         }
         if(success) {
             descriptor.setSuccessfullHit(data.coordinates[0], data.coordinates[1]);
+            shipSize++;
             lastSuccessfullHit.add(data.coordinates);
         } else {
             descriptor.setHit(data.coordinates[0], data.coordinates[1]);
@@ -44,18 +48,47 @@ public class HitAnalyzer
         return success;
     }
     
+    private void updateRatings()
+    {
+        analyzePossibleHitLocations(0, descriptor.getDimensions()[0], 0, descriptor.getDimensions()[1]);
+        descriptor.resetRating();
+        filler.countRating(descriptor, possibleHitLocations);
+    }
+    
     private LocationData getHitLocation()
     {
-        int[] coordinates; 
         if(lastSuccessfullHit.isEmpty()) {
-            analyzePossibleHitLocations(0, descriptor.getDimensions()[0], 0, descriptor.getDimensions()[1]);
+            return getIfNoShipFound();
         } else {
-            do {
-                coordinates = lastSuccessfullHit.pollLast();
-                analyzePossibleHitLocations(coordinates[0] - 1, coordinates[0] + 2, coordinates[1] - 1, coordinates[1] + 2);
-            } while (possibleHitLocations.isEmpty());
-            lastSuccessfullHit.add(coordinates);
+            return getIfShipFound();
         }
+        
+    }
+    
+    private LocationData getIfNoShipFound()
+    {
+        int maxRating = 0;
+        LocationData result = possibleHitLocations.get(0);
+        
+        for(LocationData data: possibleHitLocations){
+            if(descriptor.getRating(data.coordinates[0], data.coordinates[1]) > maxRating)
+            {
+                maxRating = descriptor.getRating(data.coordinates[0], data.coordinates[1]);
+                result = data;
+            }
+        }
+        return result;
+    }
+    
+    private LocationData getIfShipFound()
+    {
+        int[] coordinates;
+        
+        do {
+            coordinates = lastSuccessfullHit.pollLast();
+            analyzePossibleHitLocations(coordinates[0] - 1, coordinates[0] + 2, coordinates[1] - 1, coordinates[1] + 2);
+        } while (possibleHitLocations.isEmpty());
+        lastSuccessfullHit.add(coordinates);
         return possibleHitLocations.get(rand.nextInt(possibleHitLocations.size()));
     }
     
@@ -86,8 +119,11 @@ public class HitAnalyzer
         return false;
     }
     
+    private RatingFiller filler;
+    private int shipSize = 0;
     private Deque<int[]> lastSuccessfullHit = new LinkedList<>();
     private Random rand = new Random((new Date()).getTime());
     private BotFieldDescriptor descriptor;
     private List<LocationData> possibleHitLocations = new ArrayList<>();
 }
+
