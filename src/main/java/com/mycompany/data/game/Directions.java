@@ -2,7 +2,7 @@ package com.mycompany.data.game;
 
 public enum Directions
 {
-    North(0, -1), East(1, 0), South(0, 1), West(-1, 0), None(5, 5);
+    North(0, -1), East(1, 0), South(0, 1), West(-1, 0);
 
     private Directions(int x, int y)
     {
@@ -23,7 +23,7 @@ public enum Directions
         try {
             result = valueOf(valueString);
         } catch(RuntimeException e) {
-            return None;
+            return null;
         }
         return result;
     }

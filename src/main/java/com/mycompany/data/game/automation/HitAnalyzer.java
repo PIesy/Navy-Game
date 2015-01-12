@@ -9,7 +9,6 @@ import java.util.Random;
 
 import com.mycompany.data.exceptions.AlreadyHitException;
 import com.mycompany.data.exceptions.ShipIsKilledException;
-import com.mycompany.data.game.Directions;
 import com.mycompany.data.game.GameRules;
 import com.mycompany.data.game.Grid;
 import com.mycompany.data.game.LocationData;
@@ -32,16 +31,11 @@ public class HitAnalyzer
         try {
             success = field.hit(data.coordinates[0], data.coordinates[1]);
         } catch (AlreadyHitException | ShipIsKilledException e) {
-            descriptor.setLethalHit(data.coordinates[0], data.coordinates[1]);
-            filler.destroyShip(shipSize);
-            shipSize = 0;
-            lastSuccessfullHit.clear();
+            updateIfShipDestroyed(data);
             throw (ShipIsKilledException)e;
         }
         if(success) {
-            descriptor.setSuccessfullHit(data.coordinates[0], data.coordinates[1]);
-            shipSize++;
-            lastSuccessfullHit.add(data.coordinates);
+            updateIfShipHit(data);
         } else {
             descriptor.setHit(data.coordinates[0], data.coordinates[1]);
         }
@@ -53,6 +47,22 @@ public class HitAnalyzer
         analyzePossibleHitLocations(0, descriptor.getDimensions()[0], 0, descriptor.getDimensions()[1]);
         descriptor.resetRating();
         filler.countRating(descriptor, possibleHitLocations);
+    }
+    
+    private void updateIfShipDestroyed(LocationData data)
+    {
+        shipSize++;
+        descriptor.setLethalHit(data.coordinates[0], data.coordinates[1]);
+        filler.destroyShip(shipSize);
+        shipSize = 0;
+        lastSuccessfullHit.clear();
+    }
+    
+    private void updateIfShipHit(LocationData data)
+    {
+        descriptor.setSuccessfullHit(data.coordinates[0], data.coordinates[1]);
+        shipSize++;
+        lastSuccessfullHit.add(data.coordinates);
     }
     
     private LocationData getHitLocation()
@@ -98,27 +108,16 @@ public class HitAnalyzer
         for (int i = startY; i < endY; i++) {
             for (int j = startX; j < endX; j++) 
             {
-                if(isOutOfBounds(j, i)) continue;
+                if(descriptor.isOutOfBounds(j, i)) continue;
                 if (descriptor.isValidTarget(j, i)) 
                 {
                     int[] coordinates = { j, i };
-                    possibleHitLocations.add(new LocationData(coordinates, Directions.None));
+                    possibleHitLocations.add(new LocationData(coordinates, null));
                 }
             }
         }
     }
-    
-    private boolean isOutOfBounds(int x, int y)
-    {
-        if((x < 0) || (y < 0)) {
-            return true;
-        }
-        if((x >= descriptor.getDimensions()[0]) || (y >= descriptor.getDimensions()[1])) {
-            return true;
-        }
-        return false;
-    }
-    
+        
     private RatingFiller filler;
     private int shipSize = 0;
     private Deque<int[]> lastSuccessfullHit = new LinkedList<>();

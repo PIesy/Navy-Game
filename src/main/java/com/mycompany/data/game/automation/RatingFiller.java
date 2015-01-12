@@ -1,8 +1,10 @@
 package com.mycompany.data.game.automation;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import com.mycompany.data.game.Directions;
 import com.mycompany.data.game.GameRules;
@@ -40,23 +42,29 @@ public class RatingFiller
     public void destroyShip(int size)
     {
         Ship temp = null;
+        Integer cnt = shipsCount.get(size);    
         
-        for(Ship ship: ships) {
-            if(ship.getSize() == size)
-            {
-                temp = ship;
-                break;
+        cnt--;
+        shipsCount.replace(size, cnt);
+        if(cnt == 0) 
+        {
+            for(Ship ship: ships) {
+                if(ship.getSize() == size)
+                {
+                    temp = ship;
+                    break;
+                }
             }
+            ships.remove(temp);
         }
-        ships.remove(temp);
     }
     
     private void initShips(ShipType type, int count)
     {
-        for(int i = 0; i < count; i++) {
-            ships.add(ShipBuilder.buildShip(type));
-        }
+        ships.add(ShipBuilder.buildShip(type));
+        shipsCount.put(type.getSize(), count);
     }
     
-    private List<Ship> ships = new ArrayList<>();
+    private Set<Ship> ships = new HashSet<>();
+    private Map<Integer, Integer> shipsCount = new HashMap<>();
 }

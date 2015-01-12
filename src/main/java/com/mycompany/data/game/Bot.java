@@ -14,7 +14,7 @@ class NodeDescriptor
     }
 
     public int[] coordinates = new int[2];
-    public Directions direction = Directions.None;
+    public Directions direction = null;
 }
 
 public class Bot extends LocalPlayer

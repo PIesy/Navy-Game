@@ -1,7 +1,7 @@
 package com.mycompany.data.game.automation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.mycompany.data.game.Directions;
 import com.mycompany.data.game.GameRules;
@@ -29,7 +29,7 @@ public class BotFieldDescriptor
     {
         nodes[y][x].setSuccessfullHit();
         nodes[y][x].setInValidTarget();
-        updateNodes(x, y);
+        updateSingle(x, y);
     }
     
     public void setLethalHit(int x, int y)
@@ -120,9 +120,9 @@ public class BotFieldDescriptor
         return true;
     }
     
-    private List<int[]> searchSuccsessfullyHitNodesAround(int x, int y)
+    private Set<int[]> searchSuccsessfullyHitNodesAround(int x, int y)
     {
-        List<int[]> result = new ArrayList<>();
+        Set<int[]> result = new HashSet<>();
         
         for (int i = y - 1; i <= y + 1; i++) {
             for (int j = x - 1; j <= x + 1; j++)
@@ -139,36 +139,20 @@ public class BotFieldDescriptor
     
     private void updateIfLethal(int x, int y) 
     {
-        List<int[]> hitNodes = searchSuccsessfullyHitNodesAround(x, y);
+        Set<int[]> hitNodes = searchSuccsessfullyHitNodesAround(x, y);
+        Set<int[]> temp = new HashSet<>();
         hitNodes.add(new int[] { x , y });
         
+        for(int[] coordinates: hitNodes) {
+            temp.addAll(searchSuccsessfullyHitNodesAround(coordinates[0], coordinates[1]));
+        }
+        hitNodes.addAll(temp);
         for(int[] coordinates : hitNodes) {
             validateNodesAround(coordinates[0], coordinates[1], 1, 1, false);
         }
     }
-    
-    private void updateNodes(int x, int y)
-    {
-        List<int[]> hitNodes = searchSuccsessfullyHitNodesAround(x, y);
-        int rangeX = 1, rangeY = 0;
         
-        if(hitNodes.isEmpty()) {
-            updateIfSingleHit(x, y);
-            return;
-        }
-        hitNodes.add(new int[] { x , y });
-        if(isHorizontallyShifted(x, hitNodes)) 
-        {
-            rangeX = 0;
-            rangeY = 1;
-        }
-        for(int[] coordinates : hitNodes) {
-            validateNodesAround(coordinates[0], coordinates[1], 1, 1, false);
-            restoreNodesAround(coordinates[0], coordinates[1], rangeY, rangeX);
-        }
-    }
-    
-    private void updateIfSingleHit(int x, int y)
+    private void updateSingle(int x, int y)
     {
         validateNodesAround(x, y, 1, 1, false);
         restoreNodesAround(x, y, 0, 1);
@@ -196,15 +180,7 @@ public class BotFieldDescriptor
             }
         }
     }
-    
-    private boolean isHorizontallyShifted(int startNodeX, List<int[]> hitNodes)
-    {
-        if((startNodeX - hitNodes.get(0)[0]) != 0) {
-            return true;
-        }
-        return false;
-    }
-     
+        
     private int[] dimensions;
     private NodeDescriptor[][] nodes;
 }

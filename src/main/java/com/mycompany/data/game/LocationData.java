@@ -9,5 +9,5 @@ public class LocationData
     }
     
     public int[] coordinates = new int[2];
-    public Directions direction = Directions.None;
+    public Directions direction = null;
 }
