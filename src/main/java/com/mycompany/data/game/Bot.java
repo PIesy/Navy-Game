@@ -24,6 +24,7 @@ public class Bot extends LocalPlayer
     {
         super(rules);
         analyzer = new HitAnalyzer(rules);
+        setName("Bot v39.1");
     }
 
     public void setShips(Grid field)

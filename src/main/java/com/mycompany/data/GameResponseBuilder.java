@@ -41,6 +41,18 @@ public class GameResponseBuilder
         result.setPlayerField(playerField).setBotField(botField);
         return this;
     }
+    
+    public GameResponseBuilder addPlayer1Name(String name)
+    {
+        result.setPlayer1Name(name);
+        return this;
+    }
+    
+    public GameResponseBuilder addPlayer2Name(String name)
+    {
+        result.setPlayer2Name(name);
+        return this;
+    }
 
     public GameResponse build()
     {

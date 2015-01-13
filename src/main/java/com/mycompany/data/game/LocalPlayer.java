@@ -41,6 +41,11 @@ public class LocalPlayer
 
         return ship;
     }
+    
+    public int getRemainingShipsCount()
+    {
+        return remainingShips;
+    }
 
     public void destroyShip() throws GameOverException
     {

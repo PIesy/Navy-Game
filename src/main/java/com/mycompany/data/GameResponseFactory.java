@@ -44,6 +44,17 @@ public class GameResponseFactory
         GameResponseBuilder builder = GameResponse.createBuilder();
         return builder.addEndGameMessage(message).build();
     }
+    
+    public static GameResponse makeInfoResponse(String[] names, Grid[] fields)
+    {
+        GameResponseBuilder builder = GameResponse.createBuilder();
+        int[][] field1 = getIntegerFieldDescriptor(fields[0]);
+        int[][] field2 = getIntegerFieldDescriptor(fields[1]);
+        
+        builder.addPlayerAndBotFields(field1, field2);
+        builder.addPlayer1Name(names[0]);
+        return builder.addPlayer2Name(names[1]).build();
+    }
 
     private static int[][] getIntegerFieldDescriptor(Grid field)
     {

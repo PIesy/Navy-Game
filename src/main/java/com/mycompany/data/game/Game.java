@@ -92,7 +92,7 @@ public class Game
         return GameResponseFactory.makeSuccessWithBothFieldsResponse(fields[0], fields[1]);
     }
 
-    private final Grid[] fields = new Grid[2];
-    private final LocalPlayer player;
-    private final Bot bot;
+    protected final Grid[] fields = new Grid[2];
+    protected final LocalPlayer player;
+    protected final Bot bot;
 }
