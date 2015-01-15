@@ -21,6 +21,16 @@ public class ShipBuilder
         {
             this.size = size;
         }
+        
+        public static ShipType parseSize(int size)
+        {
+            for(ShipType type: ShipType.values()) {
+                if(type.getSize() == size) {
+                    return type;
+                }
+            }
+            return null;
+        }
 
         private final int size;
     }
