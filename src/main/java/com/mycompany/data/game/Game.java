@@ -21,13 +21,33 @@ public class Game
 
     public Game(GameRules rules)
     {
+        this(rules, true);
+    }
+    
+    public Game(GameRules rules, boolean initBot)
+    {
         fields[0] = new Grid(rules.getFieldDimensions()[0], rules.getFieldDimensions()[1]);
         fields[1] = new Grid(rules.getFieldDimensions()[0], rules.getFieldDimensions()[1]);
         bot = new Bot(rules);
         player = new LocalPlayer(rules);
-        initBot();
+        if(initBot) {
+            initBot();
+        }
     }
-
+    
+    public Grid getPlayerGrid(int playerNum)
+    {
+        return fields[playerNum];
+    }
+    
+    public LocalPlayer getPlayer(int playerNum)
+    {
+        if(playerNum == 0) {
+            return player;
+        }
+        return bot;
+    }
+    
     public GameResponse setPlayerName(String name)
     {
         GameResponse response = GameResponseFactory.makeSuccessResponse();
@@ -64,7 +84,7 @@ public class Game
             fields[0].setShip(ship, coordinates[0], coordinates[1], direction);
         } catch (IndexOutOfBoundsException e) {
             player.unsetShip();
-            return GameResponseFactory.makeErrorResponse(e.getMessage());
+            return GameResponseFactory.makeErrorWithFieldResponse(e.getMessage(), fields[0]);
         }
         return GameResponseFactory.makeSuccessWithFieldResponse(fields[0]);
     }

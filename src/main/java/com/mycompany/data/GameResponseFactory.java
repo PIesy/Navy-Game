@@ -18,6 +18,13 @@ public class GameResponseFactory
         GameResponseBuilder builder = GameResponse.createBuilder();
         return builder.addError(errorMessage).build();
     }
+    
+    public static GameResponse makeErrorWithFieldResponse(String errorMessage, Grid field)
+    {
+        GameResponseBuilder builder = GameResponse.createBuilder();
+        builder.addPlayerField(getIntegerFieldDescriptor(field));
+        return builder.addError(errorMessage).build();
+    }
 
     public static GameResponse makeSuccessWithFieldResponse(Grid field)
     {
